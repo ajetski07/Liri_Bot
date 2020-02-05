@@ -1,0 +1,23 @@
+{
+  "name": "liri_bot",
+  "version": "1.0.0",
+  "description": "node command line application that take in questions and returns information from 3 API's.",
+  "main": "liribot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajetski07/Liri_Bot.git"
+  },
+  "author": "Adam Jeske",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajetski07/Liri_Bot/issues"
+  },
+  "homepage": "https://github.com/ajetski07/Liri_Bot#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "node-spotify-api": "^1.1.1"
+  }
+}
