@@ -4,25 +4,27 @@ require("dotenv").config();
 // requiring keys.js and storing it in the variable keys //
 var keys = require("./keys.js");
 
-// passing in the spotify key into a variable spotify from keys.js //
-var spotify = new Spotify(keys.spotify);
-
 // requiring my npm packages that will make the application run //
 var fs = require("fs");
 var axios = require("axios");
-var moment = reuquire("moment");
+var moment = require("moment");
+var Spotify = require("node-spotify-api");
+
+// passing in the spotify key into a variable spotify from keys.js //
+var spotify = new Spotify(keys.spotify);
 
 // functions to handle the requests that they user will pass into Liri //
-var artistName = function(artist) {
-    return artist.name;
+var artistName = function(artists) {
+    return artists.name;
 };
 
 // creating the function to run the spotify search //
 var spotifySearch = function(songTitle) {
-    if (songTitle === undefined) {
+    if (!songTitle) {
         songTitle = "Friends in low places";
     
     };
+    // console.log(songTitle);
 
     spotify.search(
         {
@@ -35,13 +37,14 @@ var spotifySearch = function(songTitle) {
                 return;
             }
 
-            var songs = data.track.items;
+            var songs = data.tracks.items;
 
             for (var s = 0; s < songs.length; s++) {
-                console.log(i);
-                console.log("artist(s): " + songs[i].artist.map(artistName));
-                console.log("song tutle: " + songs[i].name);
-                console.log("album: " + songs[i].album.name);
+                // console.log(s);
+                // console.log(songs[s]);
+                console.log("artist(s): " + songs[s].artists.map(artistName));
+                console.log("song tutle: " + songs[s].name);
+                console.log("album: " + songs[s].album.name);
                 console.log("-----------------------------------");
             }
         }
@@ -63,17 +66,17 @@ var searchBands = function(artist) {
             console.log("Upcoming shows for " + artist + ":");
 
             for (var b = 0; b < bandsData.length; b++) {
-                var shows = bandsData[i];
+                var shows = bandsData[b];
 
                 // return the data about the upcoming shows and show it in the console //
                 console.log(
                     shows.venue.city +
                     "," +
-                    (show.venue.region || show.venue.country) +
+                    (shows.venue.region || shows.venue.country) +
                     " at " +
-                    show.venue.name +
+                    shows.venue.name +
                     " " +
-                    moment(show.datetime).format("MM/DD/YYYY")
+                    moment(shows.datetime).format("MM/DD/YYYY")
                 );
             }
         }
@@ -82,25 +85,29 @@ var searchBands = function(artist) {
 
 // creating the function for running my movie search //
 var movieSearch = function(movieTitle) {
-    if (movieTitle === undefined) {
+    if (!movieTitle) {
         movieTitle = "The Big Lebowski";
     }
 
-    var movieQuery = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=full&tomatoes=true&apikey=trilogy";
+    var movieQuery = "http://www.omdbapi.com/?t=" + movieTitle + "&y=&plot=full&tomatoes=true&apikey=trilogy";
+
+    console.log(movieQuery);
 
     axios.get(movieQuery).then(
         function(res) {
             var movieData = res.data;
 
+            console.log(movieData);
+
             console.log("Title: " + movieData.title);
-            console,log("Year: " + movieData.year);
+            console.log("Year: " + movieData.year);
             console.log("Rated: " + movieData.rated);
             console.log("IMDB Rating: " + movieData.imdbRating);
             console.log("Country: " + movieData.country);
             console.log("Language: " + movieData.language);
             console.log("Plot: " + movieData.plot);
             console.log("Actors: " + movieData.actors);
-            console.log("Rotten Tomatoes: " + movieData.rating[1].value);
+            console.log("Rotten Tomatoes: " + movieData.rating[0].value);
         }
     );
 };
